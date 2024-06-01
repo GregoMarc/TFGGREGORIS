@@ -10,23 +10,23 @@ import BOLDFilters
 import matplotlib.pyplot as plt
 
 
-# Cargar datos
+# Carregar dades
 
 NSUB = 36
 NPARCELLS = 360
 Tmax = 197
 lambda_val = 0.18
 
-# Parámetros de los datos
+# Parámetres de les dades
 TR = 3 # Tiempo de Repetición (segundos)
 
-# Configuración del filtro pasa banda
+# Configuració del filtre pas banda
 fnq = 1 / (2 * TR)  # Frecuencia de Nyquist
-flp = 0.01  # Frecuencia de corte inferior del filtro (Hz)
-fhi = 0.09  # Frecuencia de corte superior del filtro (Hz)
-Wn = [flp / fnq, fhi / fnq]  # Frecuencia no dimensional del filtro Butterworth
-k = 2  # Orden del filtro Butterworth
-bfilt, afilt = butter(k, Wn, btype='band',analog=False)  # Construir el filtro
+flp = 0.01  # Frecuencia de tall inferior del filtre (Hz)
+fhi = 0.09  # Frecuencia de tall superior del filtre (Hz)
+Wn = [flp / fnq, fhi / fnq]  # Frecuencia no dimensional del filtre Butterworth
+k = 2  # Ordre del filtre Butterworth
+bfilt, afilt = butter(k, Wn, btype='band',analog=False)  # Construir el filtre
 
 
 
@@ -34,7 +34,7 @@ bfilt, afilt = butter(k, Wn, btype='band',analog=False)  # Construir el filtro
 
 
 def Turbulencia(ts):
-    # Inicialización de matrices para almacenar resultados
+    # Inicializació de matrius per guardar resultats
     enstrophy = np.zeros((NPARCELLS, Tmax))
     enstrophy_su = np.zeros((NPARCELLS, Tmax))
     signal_filt = np.zeros((NPARCELLS, Tmax))
@@ -53,18 +53,18 @@ def Turbulencia(ts):
 
 
     Schaefercog = np.loadtxt('glasser_coords.txt')
-    # Cálculo de la matriz de distancias
+    # Calcul de la matriu de distancies
     rr = np.zeros((NPARCELLS, NPARCELLS))
     for i in range(NPARCELLS):
         for j in range(NPARCELLS):
             rr[i, j] = np.linalg.norm(Schaefercog[i,:] - Schaefercog[j,:])
 
-    # Construcción de la matriz de correlación exponencial
+    # Construcció de la matriu de correlació exponencial
     Cexp = np.exp(-lambda_val * rr)
     np.fill_diagonal(Cexp, 1)
 
 
-
+##Preprocessament de les sèries temporals (ts) per a cada regió cerebral (seed)
     for seed in range(NPARCELLS):
         ts[seed, :] = ts[seed, :] - np.mean(ts[seed,:])  # Detrending
         signal_filt[seed,:] = filtfilt(bfilt, afilt, ts[seed,:])
@@ -80,7 +80,7 @@ def Turbulencia(ts):
         enstrophy[i] = np.abs(sumphases)
         sumphases = np.nansum(np.tile(Cexp[i, :].T, (Tmax, 1)).T * np.exp(1j * Phases_su)) / np.nansum(Cexp[i, :])
         enstrophy_su[i] = np.abs(sumphases)
-
+#Calcul de totes les variables
     Rspatime = np.nanstd(enstrophy)
     Rspatime_su = np.nanstd(enstrophy_su)
 
@@ -93,7 +93,7 @@ def Turbulencia(ts):
     Rtime_su = np.nanstd(enstrophy_su,axis=0)
     acfspa_su = np.correlate(Rspa_su, Rspa_su, mode='full')[len(Rspa_su) - 1:]
     acftime_su = np.correlate(Rtime_su, Rtime_su, mode='full')[len(Rtime_su) - 1:]
-
+#Assignació de resultats
     results = {
         'Rspatime': Rspatime,
         'Rspatime_su': Rspatime_su,
@@ -111,7 +111,7 @@ def Turbulencia(ts):
 
     return Rspatime,Rspatime_su,Rspa,Rtime,Rspa_su,Rtime_su,acfspa,acftime,acfspa_su,acftime_su
 
-
+#funció from_fmri cridada desde el main
 
 def from_fMRI(signal, applyFilters=False, removeStrongArtefacts=True):
     if not np.isnan(signal).any():  # No problems, go ahead!!!
