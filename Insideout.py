@@ -1,4 +1,4 @@
-
+@Translated by Marc Gregoris
 import numpy as np
 from scipy.stats import ranksums
 import matplotlib.pyplot as plt
@@ -16,17 +16,17 @@ def corrcoef(x, y):
 
     cov_matrix = np.cov(x.T, y.T)
 
-    # Extraer las submatrices de covarianza entre x e y
+    # Extreure les submatrius de covariança entre x e y
     cov_xx = cov_matrix[:x.shape[1], :x.shape[1]]
     cov_xy = cov_matrix[:x.shape[1], x.shape[1]:]
     cov_yx = cov_matrix[x.shape[1]:, :x.shape[1]]
     cov_yy = cov_matrix[x.shape[1]:, x.shape[1]:]
 
-    # Calcular las desviaciones estándar de x e y
+    # Calcular les desviacions estandar de x e y
     std_x = np.sqrt(np.diag(cov_xx))
     std_y = np.sqrt(np.diag(cov_yy))
 
-    # Calcular la matriz de correlación
+    # Calcular la matriu de correlació
     corr_matrix = cov_xy / np.outer(std_x, std_y)
 
     return corr_matrix
@@ -37,7 +37,7 @@ NLAG = 6
 
 
 
-
+#Funció insideout cridada desde el from fmri
 def InsideOUT (ts):
     FowRev = np.zeros((NLAG,))
     AsymFow = np.zeros((NLAG,))
@@ -50,21 +50,21 @@ def InsideOUT (ts):
 
     for Tau in range(1,NLAG + 1):
 
-        # Calcular la correlación hacia adelante (forward)
+        # Calcular la correlació cap endevant (forward)
         ts_1 = ts[:, :-Tau].T
         ts_2 = ts[:, Tau:].T
         FCtau_foward = corrcoef(ts_1, ts_2)
-        #pctauf = FCtau_foward[-1, :-1]  # Extrae los valores de correlación de la última fila
+        
 
 
-        # Calcular la correlación hacia atrás (reversal)
+        # Calcular la correlació cap enrere (reversal)
         ts_11 = ts[:, Tm-1: Tau - 1: -1].T
 
         ts_22 = ts[:, Tm - Tau -1:: -1].T
         FCtau_reversal = corrcoef(ts_11, ts_22)
-        #pctaur = FCtau_reversal[-1, :-1]  # Extrae los valores de correlación de la última fila
+       
 
-        # Squeeze para eliminar dimensiones adicionales si es necesario
+        # Squeeze per eliminar dimensions adicionals si es necesari
         FCtf = np.squeeze(FCtau_foward[:379,:379]) #NO CAL? PYCHARM JA TRACTA LA MATRIU COM 379X379
         FCtr = np.squeeze(FCtau_reversal[:379,:379])
 
@@ -73,7 +73,7 @@ def InsideOUT (ts):
         Reference = ((Itauf[:] - Itaur[:])**2).T
         threshold = np.quantile(Reference, 0.95)
 
-        # Encontrar los índices donde la diferencia al cuadrado es mayor que el percentil 95
+        # Trobar els indexs a on la diferencia al quadrat es mayor que el percentil 95
         index = np.where(Reference > threshold)
         FowRev[Tau-1] = np.nanmean(Reference[index])
         AsymFow[Tau-1] = np.mean(np.abs(Itauf - Itauf.T))
@@ -85,17 +85,16 @@ def InsideOUT (ts):
 
 # @jit(nopython=True)
 def from_fMRI(signal, applyFilters=True, removeStrongArtefacts=True):
-    if not np.isnan(signal).any():  # No problems, go ahead!!!
+    if not np.isnan(signal).any():  
         if applyFilters:
             signal_filt = BOLDFilters.BandPassFilter(signal, removeStrongArtefacts=removeStrongArtefacts)
             sfiltT = signal_filt
         else:
             sfiltT = signal
-        cc = InsideOUT(sfiltT)  # Pearson correlation coefficients
+        cc = InsideOUT(sfiltT)  
 
         return cc
 
     else:
-        warnings.warn('############ Warning!!! FC.from_fMRI: NAN found ############')
-        # n = signal.shape[0]
+        warnings.warn('############ Warning!!! FC.from_fMRI: NAN found ############')]
         return np.nan
