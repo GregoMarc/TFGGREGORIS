@@ -94,7 +94,7 @@ def calculate_stats(data):
     stds = np.nanstd(data, axis=0)
     return means, stds
 
-# Calcular media y desviación estándar para Rspa y Rspa_su
+# Calcular mitjana i desviació estandar per Rspa y Rspa_su
 mean_Rspa, std_Rspa = calculate_stats(rspa_lista)
 mean_Rspa_su, std_Rspa_su = calculate_stats(rspa_su_lista)
 
@@ -191,33 +191,33 @@ p_values.plotComparisonAcrossLabels2(BOXRSPA)
 
 
 ############################DICC TURBULENCIA##################################################
-# Creamos un nuevo diccionario para almacenar la información fusionada
+# Creem un nou diccionari per guardar la informació fusionada
 fusion_dict2 = {}
 
-# Iteramos sobre las claves de uno de los diccionarios (supongamos Fr)
+# Iterem sobre les claus de un dels diccionaris (suposem Fr)
 for id_sujeto, Rspatime in Fr2.items():
-    # Verificamos si el ID del sujeto está presente en ambos diccionarios
+    # Verifiquem si el ID del subjete esta present en els dos diccionaris
     if id_sujeto in P:
-        # Obtenemos el tipo del sujeto del segundo diccionario
+        # Obtenim el tipo del subjecte del segon diccionari
         tipo = P[id_sujeto]
-        # Almacenamos la información fusionada en el nuevo diccionario
+        # Guardem la informació fusionada en el nou diccionari
         fusion_dict2[id_sujeto] = {'Rspatime': Rspatime, 'tipo': tipo}
-        # Ordenar las claves del diccionario fusion_dict por tipo y luego por ID
+        # Ordenar les claus del diccionari fusion_dict per tipo i despues per ID
 fusion_ordenado2 = sorted(fusion_dict2.items(), key=lambda x: (x[1]['tipo'], x[0]))
 
-        # Convertir la lista de tuplas nuevamente en un diccionario
+        # Convertir la llista de tuples novament en un diccionari
 fusion_ordenado2_dict = dict(fusion_ordenado2)
 
-# Crear tres diccionarios buits per posar subjectes i fowrev de cada tipu
+# Crear tres diccionaris buits per posar subjectes i fowrev de cada tipus
 tipo_HC = {}
 tipo_MCI = {}
 tipo_AD = {}
 
-# Iterar sobre los elementos del diccionario fusionado ordenado
+# Iterar sobre els elements del diccionari fusionat ordenat
 for id_sujeto, info_sujeto in fusion_ordenado2_dict.items():
     tipo = info_sujeto['tipo']
     Rspatime = info_sujeto['Rspatime']
-    # Agregar el sujeto al diccionario correspondiente según su tipo
+    # Agregar el subjete al diccionari corresponent según el seu tipo
     if tipo == 'HC':
         tipo_HC[id_sujeto] = Rspatime
     elif tipo == 'MCI':
@@ -228,7 +228,7 @@ for id_sujeto, info_sujeto in fusion_ordenado2_dict.items():
         print("ee")
 
 
-# Convertir los diccionarios en arrays per facilitar l'acces.
+# Convertir els diccionaris en arrays per facilitar l'acces.
 array_HC = np.array(list(tipo_HC.values()))
 array_MCI = np.array(list(tipo_MCI.values()))
 array_AD = np.array(list(tipo_AD.values()))
@@ -246,21 +246,21 @@ Tauwinner = calculate_Tauwinner(listafowrevs)
 
 
 
-# Creamos un nuevo diccionario para almacenar la información fusionada
+# Creem un nou diccionari para guardar la informació fusionada
 fusion_dict = {}
 
-# Iteramos sobre las claves de uno de los diccionarios
+# Iterem sobre las claus de un dels diccionaris
 for id_sujeto, fowrev in Fr.items():
-    # Verificamos si el ID del sujeto está presente en ambos diccionarios
+    # Verificamos si el ID del subjete esta present en els dos diccionarios
     if id_sujeto in P:
-        # Obtenemos el tipo del sujeto del segundo diccionario
+        # Obtenim el tipo del subjete del segon diccionari
         tipo = P[id_sujeto]
-        # Almacenamos la información fusionada en el nuevo diccionario
+        # Guardem la informació fusionada en el nou diccionari
         fusion_dict[id_sujeto] = {'fowrev': fowrev, 'tipo': tipo}
-        # Ordenar las claves del diccionario fusion_dict por tipo y luego por ID
+        # Ordenar las claus del diccionari fusion_dict per tipo i después por ID
 fusion_ordenado = sorted(fusion_dict.items(), key=lambda x: (x[1]['tipo'], x[0]))
 
-        # Convertir la lista de tuplas nuevamente en un diccionario
+        # Convertir la llista de tuplas novament en un diccionari
 fusion_ordenado_dict = dict(fusion_ordenado)
 
 
@@ -268,16 +268,16 @@ fusion_ordenado_dict = dict(fusion_ordenado)
 
 
 
-# Crear tres diccionarios buits per posar subjectes i fowrev de cada tipu
+# Crear tres diccionaris buits per posar subjectes i fowrev de cada tipu
 tipo_HC = {}
 tipo_MCI = {}
 tipo_AD = {}
 
-# Iterar sobre los elementos del diccionario fusionado ordenado
+# Iterar sobre els elements del diccionari fusionat ordenat
 for id_sujeto, info_sujeto in fusion_ordenado_dict.items():
     tipo = info_sujeto['tipo']
     fowrev = info_sujeto['fowrev']
-    # Agregar el sujeto al diccionario correspondiente según su tipo
+    # Agregar el subjete al diccionari corresponent segons el seu tipu
     if tipo == 'HC':
         tipo_HC[id_sujeto] = fowrev[Tauwinner]
     elif tipo == 'MCI':
@@ -288,7 +288,7 @@ for id_sujeto, info_sujeto in fusion_ordenado_dict.items():
         print("ee")
 
 
-# Convertir los diccionarios en arrays per facilitar l'acces.
+# Convertir els diccionaris en arrays per facilitar l'acces.
 array_HC = np.array(list(tipo_HC.values()))
 array_MCI = np.array(list(tipo_MCI.values()))
 array_AD = np.array(list(tipo_AD.values()))
